@@ -152,6 +152,26 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Virtual environment
+venv/
+
+# Database
+*.db
+
+# Sensitive configuration
+.env
+
+# IDE or editor-specific files
+.vscode/
+.idea/
+
+# Compiled or generated files
+*.pyc
+*.pyo
+*.log
+*.tmp
+
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
