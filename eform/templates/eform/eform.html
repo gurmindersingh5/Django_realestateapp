@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}New Entry{% endblock %}
+
+{% block h1 %}Purchase Entry{% endblock %}
+
+{% block content %}
+<div class=" container div-bg" >
+  <div class="left-align">
+
+      <form method="POST" id="EntryForm" name="EntryForm">
+        {% csrf_token %}
+          <label style="font-size: 18px; margin-left:35px;">Select a Customer:</label> <br>
+          <div style="margin-left:35px; " >
+              <select id="Customer_name" style="font-size: 20px; width:300px; margin-right:10px;">
+                <option value="0">Select Customer</option>
+                {% block customer %}
+                    {% for elem in name_list %}
+                        <option value="{{elem.cust_id}}">{{elem}}</option>
+                    {% endfor %}
+                {% endblock %}
+              </select>
+              <a id="cust-address" > </a>
+          </div>
+      </form>
+
+
+      <form id="EntryForm2"  style="color:navy" class="left-align" >
+        {% csrf_token %}
+
+
+                <div style="padding: 15px;">
+                    <table border="1">
+                      <thead>
+                        <tr>
+                            <th style="font-size: 24px; width:700px; font-weight: bold;">Parts</th>
+                            <th style="font-size: 24px; width:30px; font-weight: bold;">Qty</th>
+                            <th style="font-size: 24px; width:30px; font-weight: bold;">Price</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                          <tr>
+                              <td>
+                              {% block part %}
+                                  <select id="part" style="font-size: 20px; width:600px;" >
+                                    <option value="0">Select Product</option>
+                              {% for key in part_list %}
+                                    <option value="key">{{key}}</option>
+                              {% endfor %}
+                                  </select>
+                              {% endblock %}
+                              </td>
+
+                              <td ><input id="quantity" class="form-control form-control-lg", style="font-size: 20px; width:80px;"></td>
+                              <td ><input style="font-size:20px; min-height: 27px; width:100px; margin-bottom:2px;" id="price-input"; >{{val}}</td>
+                          </tr>
+                       </tbody>
+                    </table>
+                        
+                </div>
+
+                <div style="margin-left:15px; margin-top:5px;" >
+                  <form id="hiddenForm", name="hiddenForm", method="POST">
+                    {% csrf_token %}
+                  
+                    <input type="hidden" id="hiddenInpPrice" name="Price" value="">
+                    <input type="hidden" id="hiddenInpId" name="custid" value="">
+                    <input type="hidden" id="hiddenInpQty" name="qty" value="">
+                    <input type="hidden" id="hiddenInpPart" name="Parts_purchased" value="">
+                  
+                    <button type="submit" class="btn btn-lg " onclick="send()"  style="background-color: yellow; ">Submit</button>
+
+                  
+                  </form>
+                </div><br><br><br><br>
+{{"here"}}{{error_note}}{{"here"}}
+          {{LASTENTRY}}
+        </form>
+
+
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+
+  let selectedValue;
+
+  const entryForm = document.getElementById('EntryForm');
+
+  entryForm.addEventListener('change', function(e) {
+    e.preventDefault();
+    // Get the selected value from the dropdown_select_Element
+    const dropdown = document.getElementById('Customer_name');
+    selectedValue = dropdown.options[dropdown.selectedIndex].text;
+
+    // Update innerHTMl
+    document.getElementById('cust-address').innerHTML = selectedValue;
+    
+    // Set value of HiddenInpId
+    const hiddenInp_id = document.getElementById("hiddenInpId");
+    hiddenInp_id.value = 1;
+    console.log(hiddenInp_id.value);
+  });
+
+  
+    let selectedPart;
+    let selectedPrice;
+
+    const entryForm2 = document.getElementById('EntryForm2');
+
+    entryForm2.addEventListener('change', function(event) {
+      event.preventDefault();
+
+
+    const Part_dropdown = document.getElementById('part');
+    selectedPart = Part_dropdown.options[Part_dropdown.selectedIndex].text;
+    const hiddenInp_part = document.getElementById('hiddenInpPart');
+    hiddenInp_part.value = selectedPart;
+    
+    const xhr = new XMLHttpRequest();
+  const url = "{% url 'e_form' %}";
+  const params = "part=" + encodeURIComponent(selectedPart);
+  
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  xhr.setRequestHeader("X-CSRFToken", csrftoken);  
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const response = JSON.parse(xhr.responseText);
+      const intendedPrice = response.intendedPrice;
+      
+      // Do something with the intendedPrice value
+      
+      console.log(intendedPrice);
+      document.getElementById("price-input").value = intendedPrice;
+      document.getElementById("hiddenInpPrice").value = intendedPrice;
+
+      
+    }
+  };
+  
+  xhr.send(params);
+
+    });
+
+    q = document.getElementById("quantity");
+    q.addEventListener('change', function(){
+      hidden_q = document.getElementById("hiddenInpQty");
+      hidden_q.value = q.value;
+      console.log(q.value);
+    });
+
+    function send(){
+      console.log("hiddenForm is submit")
+      
+      document.getElementById("hiddenForm").submit();
+
+    };
+</script>
+
+
+
+
+{% endblock %}
+

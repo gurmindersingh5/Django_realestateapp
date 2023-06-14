@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block h1 %}ORDER LIST{% endblock %}
+
+{% block content %}
+
+<div style="color: darkgreen; display: flex; align-items: center; padding: 1px;">
+            <p style="font-size: 18px; margin-left: 13px;">{{ customer_data.name }}</p>
+</div>
+<div style="color: darkgreen; display: flex; align-items: center;">
+    <p style="font-size: 18px; margin-left: 14px; "> Address: {{ customer_data.address }}</p>
+</div>
+<div style="padding: 13px;">
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Parts</th>
+          <th>Qty</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in customer_purchased_data %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.parts }}</td>
+            <td>{{ item.qty }}</td>
+            <td>{{ item.price }}</td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+<p style="margin-left:1000px; color:darkgreen; font-size: 30px; font-weight: bold;" >Total : {{total}}</p>
+
+     <div style=" background-color: lightyellow; color:darkgreen; padding: 3px; border: 1px solid darkgreen; display: inline-block;">
+              <ul></ul>
+        </div>
+
+{% endblock %}

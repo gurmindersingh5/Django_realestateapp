@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Customer List{% endblock %}
+{% block h1 %}Customer List{% endblock %}
+
+    {% block content %}
+<style>
+
+    #name-header.sorted {
+      background-image: url("{% static 'images/up.png' %}");
+    }
+  
+    #name-header.sorted.reverse {
+      background-image: url("{% static 'images/down.png' %}");
+    }
+  
+</style>
+    <form method="POST" >
+        {% csrf_token %}
+            <div class="inventory">
+                {{form.as_p}}
+                <button type="submit" class="btn btn-lg">Submit</button>
+              </div>
+    </form>
+
+
+
+<div style="padding: 15px; font-size: 18px;" >
+    <table border="1">
+      <thead>
+        <tr>
+          <th>S.No.</th>
+          <th id="name-header" class="sorted"><a href="#" style="  text-decoration: none;">Name</a></th>
+          <th>Address</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in results %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a id="{{ item.cust_id }}" href="{% url 'customerlist' item.cust_id %}"
+                  style="text-decoration: none;">{{ item.name }}</a></td>
+            <td>{{ item.address }}</td>
+            <td>{{ item.contact }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+     <div style=" background-color: lightyellow; color:darkgreen; padding: 3px; border: 1px solid darkgreen; display: inline-block;">
+              <ul>{{note}}</ul>
+        </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('a').click(function(e) {
+      e.preventDefault();
+      var sort = $(this).attr('id');
+      console.log(sort);
+      var url = "{% url 'customerlist' 0 %}?sort=" + sort;
+      console.log(url);
+      window.location.href = url;
+    });
+  });
+
+
+  // Get the "Name" column header
+  const nameHeader = document.querySelector('#name-header');
+
+  // Add an event listener for when the header is clicked
+  nameHeader.addEventListener('click', function() {
+    // Toggle the "sorted" class on the header
+    nameHeader.classList.toggle('sorted');
+  });
+
+</script>
+
+
+{% endblock %}
+
+{%block footer%}
+{%endblock%}
+
