@@ -1,19 +1,10 @@
 # Django Real Estate App With Multiple Users And Databases
 
-This is a project that demonstrates how you can use multiple user types and multiple databases in Django. This is strictly a Django backend REST API using the Django REST Framework.
+This project uses multiple user types and multiple databases in Django. This is a Django backend REST API using the Django REST Framework.
 
-In order to test out this project, follow these steps:
+It has 2 databases in postgreSQL, one for **users** and other for **listings**
 
--   clone the repository
-
-Then create 2 databases in postgreSQL, one called **listingz_users** and one called **listingz_listings**
-
-Then under core/settings.py:
-
--   find the DATABASES setting, set the PASSWORD field to both your databases password to your postgreSQL user password
-
-Once you have your databases setup, proceed to the following steps:
-
+Steps:
 -   create a virtual environment by running: python3 -m venv venv
 -   then activate the virtual environment: source venv/bin/activate (MacOS) or .\venv\Scripts\activate (Windows)
 -   then run the following commands:
